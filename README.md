@@ -145,3 +145,39 @@ User.query(`CALL "oauth".insert_when_unique(${profile.id},
 
             });
 ```
+
+## Part 6: Cookie Session
+
+1. Require cookie-session module ```npm install cookie-session```
+```bash
+# Use cookie-session to control our HTTP session
+# HTTP session allows web servers to maintain user identity and to store user-specific data during request/response interactions between a client application and a web application.
+```
+2. Encrypt key
+```js
+// set up cookie-session
+app.use(cookieSession({
+    maxAge: 24 * 60 * 60 * 1000,
+    keys: ['secret encrypt key']
+}));
+```
+3. Update ```config/keys.js``` and initialize passport
+```js
+// config/keys.js
+module.exports = {
+    google:{...},
+    postgresdb:{...},
+    session:{
+        cookieKey: 'thisismyuniquecookiekey'
+    }
+};
+// index.js
+app.use(passport.initialize());
+app.use(passport.session());
+```
+4. OAuth Test
+* Test our web app @ loalhost:3000
+* Login using Google
+* Then you need to see a json value printed to your web page
+
+5. Redirecting Users
