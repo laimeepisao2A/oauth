@@ -178,6 +178,4 @@ app.use(passport.session());
 4. OAuth Test
 * Test our web app @ loalhost:3000
 * Login using Google
-* Then you need to see a json value printed to your web page
-
-5. Redirecting Users
+* Then you need to see a json value printed on your web page
