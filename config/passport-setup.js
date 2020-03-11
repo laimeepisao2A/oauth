@@ -4,16 +4,19 @@ const keys = require('./keys');
 const User = require('../models/user-model');
 
 passport.serializeUser((user, done)=>{
+    console.log("serializeUser...");
     done(null, user.id); // A piece of info and save it to cookies
 });
 
 passport.deserializeUser((id, done)=>{
+    console.log("deserializeUser...");
     //Who's id is this?
     User.query(`SELECT "oauth".findById(${id})`,(err,res)=>{
+        console.log("%%%%%%%%%%%% res.rows[0] %%%%%%%%%%%%%");
+        console.log(res.rows[0]);
         if(err){
             console.log(err);
-        }else{
-            console.log(res.rows[0]);
+        }else{            
             done(null, user); 
         }        
     });
