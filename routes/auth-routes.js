@@ -1,3 +1,4 @@
+
 const router = require('express').Router();
 const passport = require('passport');
 
@@ -20,6 +21,14 @@ router.get('/google',passport.authenticate('google',{
 // callback route for google to redirect to
 router.get('/google/callback',passport.authenticate('google'),(req, res)=>{
     res.send('you reached the callback URI');
+});
+
+// auth with facebook
+router.get('/facebook', passport.authenticate('facebook'));
+
+//callback route for facebook redirect to
+router.get('/facebook/callback',passport.authenticate('facebook'),(req, res)=>{
+    res.redirect('/profile/');
 });
 
 module.exports = router;
