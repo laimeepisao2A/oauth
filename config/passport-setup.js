@@ -55,39 +55,37 @@ passport.use(
                     });
     })
 );
-passport.use(
-    new FacebookStrategy({
-        // options for the google strat
-        callbackURL: '/auth/facebook/callback',
-        clientID: keys.facebook.clientID,
-        clientSecret: keys.facebook.clientSecret
-    }, (accessToken, refreshToken, profile, done)=>{
-        // check if user already exists in our database
-        console.log('##########################');
-        console.log(profile);
-        User.query(`CALL "oauth".insert_when_unique(${profile.id},
-                                                    '${profile.displayName}',
-                                                    '${profile.photos[0].value}');`,
-                    (err,res)=>{
-                        console.log(">>>>>>>>>>>>>>>>>>>>>>");
-                        const _user = {
-                            id: profile.id,
-                            name: profile.displayName,                                
-                            picture: profile.photos[0].value
-                        };
-                        if(err){
-                            //already have the user
-                            const currentUser = _user;
-                            console.log('User is ', JSON.stringify(currentUser));
-                            done(null, currentUser);
-                            //console.log(err);
-                        }else{
-                            //if not, new user was created in our db
-                            const newUser = _user;
-                            console.log('New User created: ' + JSON.stringify(newUser));
-                            done(null, newUser);
-                            // console.log(res.rows[0]);
-                        }
-                    });
-    })
-);
+passport.use(new FacebookStrategy({
+    clientID: keys.facebook.clientID,
+    clientSecret: keys.facebook.clientSecret,
+    callbackURL: "auth/facebook/callback",
+    profileFields: ['id', 'displayName', 'photos', 'email']
+},
+function(accessToken, refreshToken, profile, cb) {
+    User.query(`CALL "oauth".insert_when_unique(${profile.id},
+    '${profile.displayName}',
+    '${profile.photos[0].value}');`,
+        (err,res)=>{
+            console.log(">>>>>>>>>>>>>>>>>>>>>>");
+            const _user = {
+                id: profile.id,
+                name: profile.displayName,
+                picture: profile.photos[0].value
+            };
+
+            if(err){
+                //already have the user
+                const currentUser = _user;
+                console.log('User is ', JSON.stringify(currentUser));
+                cb(null, currentUser);
+                console.log(err);
+            }else{
+                //if not, new user was created in our db
+                const newUser = _user;
+                console.log('New User created: ' + JSON.stringify(newUser));
+                cb(null, newUser);
+                console.log(res.rows[0]);
+            }
+        });
+}
+));

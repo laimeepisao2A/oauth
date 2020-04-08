@@ -31,7 +31,3 @@ router.get('/facebook/callback',passport.authenticate('facebook'),(req, res)=>{
 });
 
 module.exports = router;
-
-
-
-
