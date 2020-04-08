@@ -23,14 +23,15 @@ router.get('/google/callback',passport.authenticate('google'),(req, res)=>{
 });
 
 // auth with facebook
-router.get('/facebook', passport.authenticate('facebook',{
-    scope:['profile']
-}));
+router.get('/facebook', passport.authenticate('facebook'));
 
 //callback route for facebook redirect to
 router.get('/facebook/callback',passport.authenticate('facebook'),(req, res)=>{
-    res.send('you reached the callback URI');
+    res.redirect('/profile/');
 });
+
 module.exports = router;
+
+
 
 
